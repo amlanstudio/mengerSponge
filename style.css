@@ -1,0 +1,22 @@
+body { margin: 0; }
+
+.infos{
+    position: absolute;
+	top: 10px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display:block;
+    color:white;
+}
+
+h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size:4em;
+}
+h2{
+    font-family: 'Rubik', sans-serif;
+}
+p{
+    font-family: 'Rubik', sans-serif;
+}
