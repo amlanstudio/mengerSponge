@@ -39,48 +39,53 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+// Anchor
+const anchor = new THREE.Object3D();
+anchor.position.set(0, -0.5, 0);
+scene.add(anchor);
 // scene.add(cube);
 
 // Define the recursive function to create the Menger Sponge
-function createMengerSponge(posx, posy, posz, size,iterations, current_iteration=0) {
+function createMengerSponge(x, y, z, size,iterations, current_iteration=0) {
     if (current_iteration==iterations){
         // Define cube
         const initialGeometry = new THREE.BoxGeometry(size,size,size);
         const material = new THREE.MeshBasicMaterial({ color: 0xffff0f });
         const cube = new THREE.Mesh(initialGeometry, material);
-        cube.position.set(posx,posy,posz);
-        scene.add(cube);
-    }else{
-        const newSize=size/3.0;
-        const neighbores= (-1,0,1);
-        let i,j,k;
-        for(i in neighbores){
-            for(j in neighbores){
-                for(k in neighbores){
-                    if(abs(i)+abs(j)+abs(k)>1){
-                        createMengerSponge(posx+i*newSize,posy+j*newSize,posz+k*newSize,newSize,iterations,current_iteration+1);
-                    }
+        cube.position.set(x,y,z);
+        anchor.add(cube);
+        return;
+    }
+
+    const newSize=size/3.0;
+    const values= [-1,0,1]; // For neighbours
+
+    for(let i in values){
+        for(let j in values){
+            for(let k in values){
+                if(Math.abs(values[i])+Math.abs(values[j])+Math.abs(values[k])>1){
+                    createMengerSponge(x+values[i]*newSize,y+values[j]*newSize,z+values[k]*newSize,newSize,iterations,current_iteration+1);
                 }
             }
         }
-
     }
-        }
-    
-        createMengerSponge(0,0,0,1.0,3); // You can change the depth here
+}
 
-        // Position the camera
-        camera.position.z = 3;
+createMengerSponge(0,0,0,1,1); // You can change the depth here
 
-        // Create an animation loop
-        const animate = () => {
-        requestAnimationFrame(animate);
+// Position the camera
+camera.position.z = 3;
 
-        // Rotate the Menger Sponge
-        // cube.rotation.x += 0.01;
-        // cube.rotation.y += 0.01;
+// Create an animation loop
+const animate = () => {
+    requestAnimationFrame(animate);
 
-        renderer.render(scene, camera);
-      };
+    // Rotate the Menger Sponge
+    anchor.rotation.x += 0.01;
+    anchor.rotation.y += 0.01;
 
-      animate();
+    renderer.render(scene, camera);
+};
+
+animate();
