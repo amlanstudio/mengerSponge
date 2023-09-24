@@ -10,6 +10,14 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// Lights
+const pLight = new THREE.PointLight(0xFF00000, 1, 5000);
+pLight.position.set(0, 0, 0);
+scene.add(pLight);
+
+// const aLight = new THREE.AmbientLight(0xFF0000);
+// scene.add(aLight);
+
 // Anchor
 const anchor = new THREE.Object3D();
 anchor.position.set(0, -0.5, 0);
@@ -26,7 +34,7 @@ function createMengerSponge(position, size, depth, currentIteration = 0) {
   if (currentIteration == depth) {
     // Define cube
     const initialGeometry = new THREE.BoxGeometry(size, size, size);
-    const material = new THREE.MeshBasicMaterial({color: 0xffff0f});
+    const material = new THREE.MeshPhongMaterial({color: 0x404040});
     const cube = new THREE.Mesh(initialGeometry, material);
     cube.position.set(position.x, position.y, position.z);
     anchor.add(cube);
@@ -60,13 +68,12 @@ camera.position.z = 3;
 
 // Create an animation loop
 const animate = () => {
-  requestAnimationFrame(animate);
-
   // Rotate the Menger Sponge
   anchor.rotation.x += 0.01;
   anchor.rotation.y += 0.01;
 
   renderer.render(scene, camera);
+  requestAnimationFrame(animate);
 };
 
 animate();
