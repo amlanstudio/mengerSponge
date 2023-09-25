@@ -14,6 +14,8 @@ document.body.appendChild(renderer.domElement);
 // Controllers
 let settings = {
 	toggleRotate: true,
+	depth: 2,
+	'generate': generate,
 	pointLight: {
 		color: 0xFF0000,
 		intensity: 10
@@ -25,7 +27,7 @@ let settings = {
 	backLight: {
 		color: 0xFFFFFF,
 		intensity: 50
-	}
+	},
 };
 
 // Lights
@@ -82,9 +84,14 @@ backLightFolder.addColor(settings.backLight, 'color')
 backLightFolder.add(settings.backLight, 'intensity', 1, 50, 1)
 	.onChange((value) => backLight.intensity = value);
 lightColorFolder.open();
+
 const settingsFolder = gui.addFolder('Settings');
 settingsFolder.add(settings, 'toggleRotate');
 settingsFolder.open();
+
+const generateFolder = gui.addFolder('Generation');
+generateFolder.add(settings, 'depth', 1, 5, 1);
+generateFolder.add(settings, 'generate');
 
 
 /**
@@ -138,8 +145,12 @@ function createMengerSponge(position, size, depth, currentIteration = 0) {
 	}
 }
 
-// You can change the depth here
-createMengerSponge(new THREE.Vector3(0, 0, 0), 1, 2);
+function generate() {
+	anchor.children = [];
+
+	// You can change the depth here
+	createMengerSponge(new THREE.Vector3(0, 0, 0), 1, settings.depth);
+}
 
 // Position the camera
 camera.position.z = 3;
@@ -164,6 +175,7 @@ const animate = () => {
 		anchor.rotation.y += 0.01;
 	}
 
+	/*
 	if (isMovingForward) {
 		z += 0.1;
 		if (z < zFinal) {
@@ -174,7 +186,7 @@ const animate = () => {
 		z -= 0.1;
 		if (z >= 2.5)
 			camera.position.z = z;
-	}
+	}*/
 
 	renderer.render(scene, camera);
 	requestAnimationFrame(animate);
