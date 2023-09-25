@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GUI } from 'dat.gui'; 
+import { GUI } from 'dat.gui';
 
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -39,6 +39,13 @@ cubeFolder.add(anchor.rotation, 'x', 0, Math.PI * 2);
 cubeFolder.add(anchor.rotation, 'y', 0, Math.PI * 2);
 cubeFolder.add(anchor.rotation, 'z', 0, Math.PI * 2);
 cubeFolder.open();
+const cameraPositionFolder = gui.addFolder('Camera position');
+cameraPositionFolder.add(camera.position, 'z', 0, Math.PI * 2);
+cameraPositionFolder.open();
+const cameraRotationFolder = gui.addFolder('Camera rotation');
+cameraRotationFolder.add(camera.rotation, 'z', 0, Math.PI * 2);
+cameraRotationFolder.open();
+
 
 /**
  * Defines the recursive function to create the Menger Sponge.
@@ -74,12 +81,6 @@ function createMengerSponge(position, size, depth, currentIteration = 0) {
 						newSize, depth, currentIteration + 1);
 				}
 				else if (offset == 1) { // Center of a face
-					// const geometry = new THREE.SphereGeometry(newSize / 3, 15, 32, 16);
-					// const material = new THREE.MeshPhongMaterial({ color: 0x404040 });
-					// const sphere = new THREE.Mesh(geometry, material);
-					// sphere.position.set(position.x, position.y, position.z);
-					// anchor.add(sphere);
-
 					const geometry = new THREE.SphereGeometry(newSize / 3, 15, 32, 16);
 					const material = new THREE.MeshPhongMaterial({ color: 0x404040 });
 					const sphere = new THREE.Mesh(geometry, material);
@@ -106,15 +107,14 @@ camera.position.z = 3;
 //Mouse to turn the sponge
 let isMovingForward = true;
 let z;
-const zFinal=14;
-window.addEventListener('mousedown',function(){
-	if (z >= zFinal)
-		isMovingForward = false;
-	else
-		isMovingForward = true;
+const zFinal = 14;
+
+// On click : move the camera forward / backward
+window.addEventListener('mousedown', function () {
+	isMovingForward = z < zFinal;
 	console.log(isMovingForward);
 	z = camera.position.z;
-})
+});
 
 // Create an animation loop
 const animate = () => {
@@ -123,13 +123,13 @@ const animate = () => {
 	anchor.rotation.y += 0.01;
 
 	if (isMovingForward) {
-		z+=0.1;
-		if (z<zFinal){
-			camera.position.z=z;
+		z += 0.1;
+		if (z < zFinal) {
+			camera.position.z = z;
 		}
 	}
 	else {
-		z-=0.1;
+		z -= 0.1;
 		if (z >= 2.5)
 			camera.position.z = z;
 	}
