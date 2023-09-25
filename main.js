@@ -11,16 +11,33 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// Controllers
+let settings = {
+	toggleRotate: true,
+	pointLight: {
+		color: 0xFF0000,
+		intensity: 10
+	},
+	secondaryLight: {
+		color:0x0000FF,
+		intensity: 5
+	},
+	backLight: {
+		color: 0xFFFFFF,
+		intensity: 50
+	}
+};
+
 // Lights
-const pLight = new THREE.PointLight(0xFF00000, 10, 5000);
+const pLight = new THREE.PointLight(settings.pointLight.color, 10, 5000);
 pLight.position.set(0, -0.5, 0);
 scene.add(pLight);
 
-const backLight = new THREE.PointLight(0xFFFFFF, 50, 5000);
+const backLight = new THREE.PointLight(settings.backLight.color, 50, 5000);
 backLight.position.set(0.3, 0.5, -1);
 scene.add(backLight);
 
-const secondaryLight = new THREE.PointLight(0x0000FF, 5, 5000);
+const secondaryLight = new THREE.PointLight(settings.secondaryLight.color, 5, 5000);
 secondaryLight.position.set(-1, -1.5, 1);
 scene.add(secondaryLight);
 
@@ -45,6 +62,22 @@ cameraPositionFolder.open();
 const cameraRotationFolder = gui.addFolder('Camera rotation');
 cameraRotationFolder.add(camera.rotation, 'z', 0, Math.PI * 2);
 cameraRotationFolder.open();
+const lightColorFolder = gui.addFolder('Lights');
+lightColorFolder.addColor(settings.pointLight, 'color')
+	.name('Central light color')
+	.onChange((color) => {
+		pLight.color.setHex(color);
+	});
+lightColorFolder.addColor(settings.secondaryLight, 'color')
+	.name('Secondary light color')
+	.onChange((color) => secondaryLight.color.setHex(color));
+lightColorFolder.addColor(settings.backLight, 'color')
+	.name('Back light color')
+	.onChange((color) => backLight.color.setHex(color));
+lightColorFolder.open();
+const settingsFolder = gui.addFolder('Settings');
+settingsFolder.add(settings, 'toggleRotate');
+settingsFolder.open();
 
 
 /**
@@ -119,8 +152,10 @@ window.addEventListener('mousedown', function () {
 // Create an animation loop
 const animate = () => {
 	// Rotate the Menger Sponge
-	anchor.rotation.x += 0.01;
-	anchor.rotation.y += 0.01;
+	if (settings.toggleRotate) {
+		anchor.rotation.x += 0.01;
+		anchor.rotation.y += 0.01;
+	}
 
 	if (isMovingForward) {
 		z += 0.1;
