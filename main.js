@@ -88,11 +88,36 @@ createMengerSponge(new THREE.Vector3(0, 0, 0), 1, 2);
 // Position the camera
 camera.position.z = 3;
 
+//Mouse to turn the sponge
+let isMovingForward = true;
+let z;
+const zFinal=14;
+window.addEventListener('mousedown',function(){
+	if (z >= zFinal)
+		isMovingForward = false;
+	else
+		isMovingForward = true;
+	console.log(isMovingForward);
+	z = camera.position.z;
+})
+
 // Create an animation loop
 const animate = () => {
 	// Rotate the Menger Sponge
 	anchor.rotation.x += 0.01;
 	anchor.rotation.y += 0.01;
+
+	if (isMovingForward) {
+		z+=0.1;
+		if (z<zFinal){
+			camera.position.z=z;
+		}
+	}
+	else {
+		z-=0.1;
+		if (z >= 2.5)
+			camera.position.z = z;
+	}
 
 	renderer.render(scene, camera);
 	requestAnimationFrame(animate);

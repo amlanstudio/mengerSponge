@@ -19,4 +19,7 @@ h2{
 }
 p{
     font-family: 'Rubik', sans-serif;
+    max-width: 50%;
+    margin: auto;
+    text-align: center;
 }
