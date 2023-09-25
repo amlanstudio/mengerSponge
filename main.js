@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GUI } from 'dat.gui'; 
 
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -30,6 +31,14 @@ scene.add(aLight);
 const anchor = new THREE.Object3D();
 anchor.position.set(0, -0.5, 0);
 scene.add(anchor);
+
+// GUI
+const gui = new GUI();
+const cubeFolder = gui.addFolder('Cube');
+cubeFolder.add(anchor.rotation, 'x', 0, Math.PI * 2);
+cubeFolder.add(anchor.rotation, 'y', 0, Math.PI * 2);
+cubeFolder.add(anchor.rotation, 'z', 0, Math.PI * 2);
+cubeFolder.open();
 
 /**
  * Defines the recursive function to create the Menger Sponge.
@@ -65,6 +74,12 @@ function createMengerSponge(position, size, depth, currentIteration = 0) {
 						newSize, depth, currentIteration + 1);
 				}
 				else if (offset == 1) { // Center of a face
+					// const geometry = new THREE.SphereGeometry(newSize / 3, 15, 32, 16);
+					// const material = new THREE.MeshPhongMaterial({ color: 0x404040 });
+					// const sphere = new THREE.Mesh(geometry, material);
+					// sphere.position.set(position.x, position.y, position.z);
+					// anchor.add(sphere);
+
 					const geometry = new THREE.SphereGeometry(newSize / 3, 15, 32, 16);
 					const material = new THREE.MeshPhongMaterial({ color: 0x404040 });
 					const sphere = new THREE.Mesh(geometry, material);
