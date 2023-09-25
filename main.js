@@ -62,27 +62,24 @@ cameraPositionFolder.open();
 const cameraRotationFolder = gui.addFolder('Camera rotation');
 cameraRotationFolder.add(camera.rotation, 'z', 0, Math.PI * 2);
 cameraRotationFolder.open();
-const lightColorFolder = gui.addFolder('Lights');
 
-lightColorFolder.addColor(settings.pointLight, 'color')
-	.name('Central light color')
+const lightColorFolder = gui.addFolder('Lights');
+const centralLightFolder = lightColorFolder.addFolder('Central light');
+centralLightFolder.addColor(settings.pointLight, 'color')
 	.onChange((color) => pLight.color.setHex(color));
-lightColorFolder.add(settings.pointLight, 'intensity', 1, 50, 1)
-	.name('Central light intensity')
+centralLightFolder.add(settings.pointLight, 'intensity', 1, 50, 1)
 	.onChange((value) => pLight.intensity = value);
 
-lightColorFolder.addColor(settings.secondaryLight, 'color')
-	.name('Secondary light color')
+const secondaryLightFolder = lightColorFolder.addFolder('Secondary light');
+secondaryLightFolder.addColor(settings.secondaryLight, 'color')
 	.onChange((color) => secondaryLight.color.setHex(color));
-lightColorFolder.add(settings.secondaryLight, 'intensity', 1, 50, 1)
-	.name('Secondary light intensity')
+secondaryLightFolder.add(settings.secondaryLight, 'intensity', 1, 50, 1)
 	.onChange((value) => secondaryLight.intensity = value);
 
-lightColorFolder.addColor(settings.backLight, 'color')
-	.name('Back light color')
+const backLightFolder = lightColorFolder.addFolder('Back light');
+backLightFolder.addColor(settings.backLight, 'color')
 	.onChange((color) => backLight.color.setHex(color));
-lightColorFolder.add(settings.backLight, 'intensity', 1, 50, 1)
-	.name('Back light intensity')
+backLightFolder.add(settings.backLight, 'intensity', 1, 50, 1)
 	.onChange((value) => backLight.intensity = value);
 lightColorFolder.open();
 const settingsFolder = gui.addFolder('Settings');
